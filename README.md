@@ -2,7 +2,9 @@
 
 
 Dieses kleine Test-Repository enthält die Beispiele aus der Kolumne 
-Admin-as-a-Service des Linux Magazins, Ausgaben 04/2025 und 05/2025.
+Admin-as-a-Service des [Linux Magazins](https://www.linux-magazin.de/), Ausgaben 
+[04/2025](https://www.linux-magazin.de/magazine/2025/04/) und 
+[05/2025](https://www.linux-magazin.de/magazine/2025/05/).
 
 Beide Inventories enthalten hier natürlich nur Dummy-Daten. Hier 
 bitte selbst die entsprechenden Anpassungen durchführen.
