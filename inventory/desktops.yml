@@ -1,0 +1,14 @@
+debian_desktops:
+  hosts:
+    # Debian-Desktop 1
+    # Debian-Desktop 2
+    # ...
+    # Debian-Desktop n
+
+ubuntu_desktops:
+  hosts:
+    # Ubuntu-Desktop 1
+    # Ubuntu-Desktop 2
+    # ...
+    # Ubuntu-Desktop m
+

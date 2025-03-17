@@ -1,0 +1,9 @@
+---
+- name: Debian-Server patchen
+  hosts: debian_servers
+  tasks:
+  - name: Alle Debian Server per apt aktualisieren
+    ansible.builtin.apt:
+      force_apt_get: yes
+      upgrade: dist
+    become: yes

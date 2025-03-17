@@ -1,0 +1,120 @@
+---
+
+- name: Download gitea
+  ansible.builtin.get_url:
+    url: "{{ GITEA_BASE_URL }}/{{ GITEA_CURRENT_VERSION }}/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz"
+    dest: /opt/gitea/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  become_method: sudo
+
+- name: Signatur herunterladen
+  ansible.builtin.get_url:
+    url: "{{ GITEA_BASE_URL }}/{{ GITEA_CURRENT_VERSION }}/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.asc"
+    dest: /opt/gitea/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  become_method: sudo
+
+- name: Checksum-Datei herunterladen
+  ansible.builtin.get_url:
+    url: "{{ GITEA_BASE_URL }}/{{ GITEA_CURRENT_VERSION }}/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.sha256"
+    dest: /opt/gitea/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  become_method: sudo
+
+- name: Signatur zur Checksum-Datei herunterladen
+  ansible.builtin.get_url:
+    url: "{{ GITEA_BASE_URL }}/{{ GITEA_CURRENT_VERSION }}/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.sha256.asc"
+    dest: /opt/gitea/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  become_method: sudo
+
+
+- name: SHA256-Summe von XZ-Archiv berechnen
+  ansible.builtin.command: "sha256sum --check gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.sha256"
+  args:
+    chdir: /opt/gitea/
+  register: sha265sum_check_result
+  changed_when: False
+  become: true
+  become_method: sudo
+
+- name: Berechnung Checksum auswerten
+  fail:
+    msg: "{{ sha265sum_check_result.stdout }}"
+  when: sha265sum_check_result.rc != 0
+
+
+- name: Signatur des XZ-Archivs überprüfen
+  ansible.builtin.command: "gpg --verify gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.asc gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz"
+  args:
+    chdir: /opt/gitea/
+  register: gpg_verify_result_xz
+  changed_when: False
+  become: true
+  become_method: sudo
+
+- name: Signaturprüfung auswerten
+  fail:
+    msg: "{{ sha265sum_check_result.stdout }}"
+  when: gpg_verify_result_xz.rc != 0
+
+
+- name: Signatur der SHA256-Sum-Datei prüfen
+  ansible.builtin.command: "gpg --verify gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.sha256.asc gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz.sha256"
+  args:
+    chdir: /opt/gitea/
+  register: gpg_verify_result_sha256
+  changed_when: False
+  become: true
+  become_method: sudo
+
+- name: Signaturprüfung auswerten
+  fail:
+    msg: "{{ sha265sum_check_result.stdout }}"
+  when: gpg_verify_result_sha256.rc != 0
+
+
+
+
+
+- name: XZ-Dekompression
+  ansible.builtin.command: "xz -f -d -k /opt/gitea/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64.xz"
+  become: true
+  become_method: sudo
+
+- name: Datei ausführbar machen
+  ansible.builtin.file:
+    path: "/opt/gitea/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64"
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+  become_method: sudo
+
+- name: Symbolischen Link anlegen
+  ansible.builtin.file:
+    src: "/opt/gitea/gitea-{{ GITEA_CURRENT_VERSION }}-linux-arm64"
+    dest: /opt/gitea/gitea
+    owner: root
+    group: root
+    state: link
+  become: true
+  become_method: sudo
+
+- name: gitea-Service neu starten
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: gitea

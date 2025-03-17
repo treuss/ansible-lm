@@ -1,0 +1,25 @@
+servers:
+  children:
+    debian_servers:
+      hosts:
+        server01:
+          ansible_ssh_private_key_file: /home/$USERNAME/.ssh/id_rsa
+          ansible_user: $USERNAME
+        server02:
+          ansible_ssh_private_key_file: /home/$USERNAME/.ssh/id_rsa
+          ansible_user: $USERNAME
+        server03:
+          ansible_ssh_private_key_file: /home/$USERNAME/.ssh/id_rsa
+          ansible_user: $USERNAME
+    dns_servers:
+      hosts:
+        # PiHole-Server
+        pihole01:
+          ansible_ssh_private_key_file: /home/$USERNAME/.ssh/pihole
+          ansible_user: $USERNAME
+    gitea_servers:
+      hosts:
+        # Gitea-Server
+        gitea01:
+          ansible_ssh_private_key_file: /home/$USERNAME/.ssh/raspi03
+          ansible_user: $USERNAME

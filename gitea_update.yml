@@ -1,0 +1,5 @@
+---
+- name: Gitea-Server aktualisieren
+  hosts: gitea_servers
+  roles:
+  - role: gitea
