@@ -4,6 +4,9 @@
 Dieses kleine Test-Repository enthält die Beispiele aus der Kolumne 
 Admin-as-a-Service des Linux Magazins, Ausgaben 04/2025 und 05/2025.
 
+Beide Inventories enthalten hier natürlich nur Dummy-Daten. Hier 
+bitte selbst die entsprechenden Anpassungen durchführen.
+
 
 ## Debian patchen
 
@@ -18,7 +21,7 @@ sudo für die Rechteausweitung benötigt. Der einzige Ansible-Task liegt
 hierbei im Playbook selbst.
 
 
-```
+```bash
 ansible-playbook --ask-become-pass \
         --inventory inventory/servers.yml \
         debian_patch.yml
@@ -36,7 +39,7 @@ Aufgaben enthält.
 
 All diese Aufgaben werden über die Rolle durch das Playbook angestoßen.
 
-```
+```bash
 ansible-playbook --ask-become-pass \
         --inventory inventory/servers.yml \
         gitea_update.yml
