@@ -1,0 +1,14 @@
+---
+- name: Check-Mode-Tests
+  hosts: debian_servers
+  tasks:
+    - name: Task wird immmer Änderungen am System durchführen, selbst im Check-Mode
+      command: df -h /usr/
+      check_mode: no
+  
+    - name: Task wird stets im Check-Mode ausgeführt und nie das System ändern
+      lineinfile:
+          line: "hostname"
+          dest: /etc/motd
+          state: present
+      check_mode: yes
